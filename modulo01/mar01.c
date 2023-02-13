@@ -1,10 +1,32 @@
 #include <stdio.h>
-#include <cs50.h>
+#include "cs50.h"
 
-//cc mar01.c -o mar01 cs50.c
 //./mar01
+//cc mar01.c -o mar01 cs50.c
 
-void main(void)
+int main(void)
 {
-    int hash = get_int("Hash: ");
+    int altura = get_int("Altura: ");
+
+    for (int n = 1; n <= altura; n++)
+    {
+        for (int v = 1; v <= altura - n; v++)
+        {
+            printf(" ");
+        }
+        
+        for (int c = 1; c <= n; c++)
+        {
+            printf("#");
+        }
+
+        printf(" ");
+
+        for (int c = 1; c <= n; c++)
+        {
+            printf("#");
+        }
+        
+        printf("\n");
+    }
 }
