@@ -3,7 +3,7 @@
 
 void main(void)
 {
-     string nome;
+    string nome;
     nome = get_string("Digite seu nome: ");
     printf("Hello, %s", nome);
 }
