@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include "cs50.h"
 
-//./mar01
-//cc mar01.c -o mar01 cs50.c
-
 int main(void)
 {
     int altura;
