@@ -6,7 +6,7 @@
 
 //COLOCAR GET_FLOAT NO CÓDIGO -> substituir os centavos de 25 para 0.25 -> fazer maneira de encontrar troco (com moedas de 25, 10, 5 e 1 centavos mesmo) para valores maiores que 1 real.
  
-int main(void)
+int main()
 {
     float preco;
     float pago;
@@ -125,4 +125,6 @@ int main(void)
     printf("%i moeda(s) de 10 centavos\n", dezc);
     printf("%i moeda(s) de 5 centavos\n", cincoc);
     printf("%i moeda(s) de 1 centavo\n", umc);
+
+    return 0;
 }
