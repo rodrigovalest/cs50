@@ -5,8 +5,8 @@
 // cc cash.c -o cash cs50.c
 
 //COLOCAR GET_FLOAT NO CÓDIGO -> substituir os centavos de 25 para 0.25 -> fazer maneira de encontrar troco (com moedas de 25, 10, 5 e 1 centavos mesmo) para valores maiores que 1 real.
-
-void main(void)
+ 
+int main(void)
 {
     float preco;
     float pago;
