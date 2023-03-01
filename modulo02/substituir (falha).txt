@@ -1,0 +1,45 @@
+- Pegar a sequencia de 26 letras.
+- Pegar o texto.
+
+- Fazer a chave ser, obrigatoriamente, uma sequencia sem espaços de 26 letras (não ser numeros ou ter menos de 26 caracteres).
+- Fazer substituição da ordem dos 26 caracteres em sequência (*antes mostrar o ASCII correspondente a cada caractere) -> novo alfabeto.
+- Colocar esse "novo alfabeto" no texto digitado.
+- Imprimir resultado.
+
+
+
+
+
+*Não conter caracteres repetidos
+*Não conter outros caracteres além de letras
+*Não conter menos ou mais de 26 caracteres
+*Independer se é maiúscula ou minúscula a sequência.
+
+
+plaintext[i] = plaintext[i] - 65;
+Pegou s valores e descontou 65 para o valor começar na ordem do alfabeto e da contagem no array (0, 1, 2, 3, 4, 5, 6, 7, 8, ...).
+
+ciphertext[i] = key[plaintext[i]];
+key: VCHPRZGJNTLSKFBDQWAXEUYMOI
+plaintext: HELLO
+Pegou os "novos valores do ASCII" (depois de descontar 65) e colocou na array key[];
+
+plaintext: 8 4 11 11 17
+
+isso na key (key[8, 4, 11, 11, 17]) significa pegar os valores nas seguintes posições [8, 4, 11, 11, 17]
+
+resultando em NPSSW
+e NPSSW será igual ao ciphertext[i]
+
+
+
+apenas converter novamente ao original (se era maiusculo volta ao maiusculo e minusculo mesma coisa)
+if (isupper(ciphertext[i]))
+            {
+                ciphertext[i] -= 32;
+            }
+if (isupper(ciphertext[i]))
+            {
+                ciphertext[i] += 32;
+            }
+
