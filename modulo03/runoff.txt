@@ -12,7 +12,7 @@ Caso em alguma repetição desse processo, a 2ª, 3ª, 4ª,... opção seja algu
 
 
 
---------------------------------------------------------------------------
+-------------------------------------------------------------------
 
 data structure:
 
@@ -32,8 +32,12 @@ eleitor [0] votando como preferência [0] no candidato (= 2)
 preference[1][1] = 0
 eleitor [1] votando como preferência [1] no candidato (= 0)
 
+-------------------------------------------------------------------
 
--------------------------------------------------------------------------
+- Pedir todos os votos em ordem (get_string)
+- Comparar se o voto foi validado (corresponde o vote com o candidates[i].name) com o votes() -> caso retorne true, atualizar a tabela da preferences  
+
+-------------------------------------------------------------------
 
 FUNCTIONS
 - vote
@@ -57,7 +61,7 @@ bool vote(int voter, int rank, string name)
 	se não for encontrado, return false
 
 
-	**basicamente atualizar a tabela bidimensional da preferences (altera 	a array)
+	**basicamente atualizar a tabela bidimensional da preferences (altera a array)
 }
 
 
@@ -109,7 +113,7 @@ void eliminate(int min)
 }
 
 
-------------------------------------------------------------------------
+-------------------------------------------------------------------
 
 pegar os nomes dos candidatos ao lado da linha de comando (./runoff Adam Bryan Cecília)
 
