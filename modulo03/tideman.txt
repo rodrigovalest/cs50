@@ -1,0 +1,134 @@
+Sistema de votação tideman -> baseado em sistema de ranqueamento. Ao invés de votar em apenas um candidato, vota em vários, mas baseado em um rankeamento.
+
+Sempre comparar 2 a 2. 5 pessoas votaram em ordem de ranqueamento entre os candidatos A, B e C. Compararam (de acordo com o rank) 2 a 2 até combinar todos os pares possíveis (AB, AC, BC), sempre ignorando o(s) restante(s) que não estão sendo comparado naquele momento. Isto é, A se compara com B, sendo que, por exemplo, 3 pessoas ranquearam antes o candidato A ao invés do B, e 2 fizeram o contrário. E assim por diante com todos os candidatos. Resultando:
+
+A -> B
+C -> A
+C -> B
+
+O vencedor seria a fonte do gráfico (source), isto é, a pessoa que não tem setas apontadas para ela, porém tem setas apontadas para todas.
+No caso, C.
+
+Podem existir casos em que não exista a fonte do gráfico (A -> B; B -> C; C -> A; Criou um ciclo). No caso, considerar a força das vitórias das comparações, isto é, a diferenças de votos que cada um deles tiveram. A ganhou de B (7 a 2), C ganhou de A (6 a 3), B ganhou de C (5 a 4). Desta forma, não considerar a "vitória mais fraca", resultando em:
+
+C -> A -> B, portanto C é a source do gráfico. 
+
+FUNCIONAMENTO DO TIDEMAN VOTE
+
+- Tally: uma vez que todos os eleitores indicaram todas as suas preferências, determine, para cada par de candidatos, quem é o candidato preferido e com que margem ele é preferido.
+
+- Sort: classificar as vitórias de acordo com a força delas (dif de votos).
+
+- Lock: começando com o par mais forte, passe pelos pares de candidatos em ordem e “trave” cada par no gráfico candidato, contanto que travar nesse par não crie um ciclo no gráfico.
+
+- Checar o vencedor da eleição sobre quem é a fonte do gráfico (quem não tem flechas apontadas)
+
+-----------------------------------------------------------------------------------------------
+INT MAIN(VOID)
+
+candidates[]
+- Array unidimensional que apenas guarda os nomes do candidatos e atribui um número-posição a ele.
+
+preferences[]
+- Array bidimensional (gráfico)
+- Linha 0 comparado com a coluna 0, 1, 2 -> o valor guardado na célula representa quantas pessoas preferem o candidato 0 ao invés do 0, 1, 2 [0 comparado com 0 = 0; 0 comparado com 1 = 3; ...]
+
+typedef struct pair (int winner e loser)
+
+pairs[]
+- Array de todos os pares, onde um candidato é preferido sobre o outro
+- Caso ocorra empate, não se preocupar em adicionar o par aqui
+
+locked[i][j]
+- Array bidimensional booleana (valor inicial = false, true siginifica ter flechas apontadas)
+- locked[i][j] = true -> flecha apontada do candidato i para o j (i ganha de j)
+
+
+FUNCTIONS
+
+bool vote(int rank, string name, int ranks[])
+- Olhar para o candidato name
+- Se for encontrado, atualizar ranks e retornar true.ranks[i] para a preferencia de rank i (rank 0, rank 1,...)
+- Se não for encontrado, retornar false
+*o rank é pedido junto com o voto para cada eleitor (voter)
+*ranks é a preferencia de cada eleitor
+*no vote, a função é apenas checar se o candidato que o voter selecionou existe
+*o record_preferences ordena as escolhas individuais dos voters
+ 
+void record_preferences(int ranks[])
+- Atualizar a preferences[] baseado nos ranks dos votos
+
+/*
+ranks [0, 1, 2]
+candidato 0 é preferido antes de 1, 2
+candidato 2 é preferido antes de 2
+candidato 1 não é preferido antes de ninguém
+*/
+
+void add_pairs(void)
+- Adicionar cada par de candidatos para o pairs, se algum dos dois candidatos forem preferidos (não haver empates)
+- Atualizar a variavel universal pair_count, que conta o número total de pares
+
+void sort_pairs(void)
+- Ordenar os pares por força de vitória
+
+void lock_pairs(void)
+- Atualizar locked -> criando todas as arestas (ponta da flecha), mas garantindo que essas arestas não gerem um ciclo
+*Mecanismo que detecta se terá um ciclo ou não
+
+void print_winner(void)
+- Candidato que seja a fonte do gráfico (sem setas apontadas para ele)
+- Considerar que não tenha mais de uma fonte
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//ERROS
+    if (argc == 1)
+    {
+        printf("ERRO: tente usar ./tideman [nome dos candidatos]\n");
+        return 1;
+    }
+
+    string candidates[candidate_count];
+
+    //PEGAR O NOME DOS CANDIDATOS, GUARDAR NA candidates[] CONTAR QUANTOS TEM
+    candidate_count = argc - 1;
+
+    for (int i = 0; i < candidate_count; i++)
+    {
+        candidates[i] = argv[i + 1];
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
