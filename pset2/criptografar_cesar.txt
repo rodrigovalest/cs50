@@ -1,9 +1,0 @@
-- Pedir a chave (pedir ao lado do ./arquivo).
-- Digitar um texto.
-- Encriptar.
-- Imprimir o resultado.
-
-
-*Letras maiúsculas continuam maiúsculas (o mesmo com minúculas).
-*Se letras extremas forem pedidas (z), voltar a contagem a partir do outro lado.
-*Caracteres especiais não se alteram.
