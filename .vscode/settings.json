@@ -3,5 +3,10 @@
         "stdio.h": "c",
         "cs50.h": "c",
         "algorithm": "c"
-    }
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none",
+    "python.analysis.typeCheckingMode": "off"
 }
