@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     getrusage(RUSAGE_SELF, &after);
 
     // Exit if dictionary not loaded
-    if (!loaded)
+    if (loaded == false)
     {
         printf("Could not load %s.\n", dictionary);
         return 1;
