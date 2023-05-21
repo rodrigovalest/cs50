@@ -1,0 +1,5 @@
+### Entrar no ambiente virtual
+.\cs50env\Scripts\Activate.ps1
+
+### Sair do ambiente virtual
+deactivate
