@@ -1,8 +1,8 @@
 from cs50 import get_string
 
-def formula_coleman_liau(letters, words, sentences):
-    L = (letters / words) * 100
-    S = (sentences / words) * 100
+def formula(letras, palavras, frases):
+    L = (letras / palavras) * 100
+    S = (frases / palavras) * 100
 
     grade = int(0.0588 * L - 0.296 * S - 15.8)
 
@@ -22,11 +22,11 @@ frases = 0
 for char in text:
     if char.isalpha():
         letras += 1
-    elif char.isspace():
+    elif char == " ":
         palavras += 1
-    elif char == "." or char == "?" or char == "!":
+    elif char == "." or char == "!" or char == "?":
         frases += 1
 
-grade_level = formula_coleman_liau(letras, palavras, frases)
+grade = formula(letras, palavras, frases)
 
-print(grade_level)
+print(grade)

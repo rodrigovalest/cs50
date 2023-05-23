@@ -1,0 +1,34 @@
+STR -> algumas bases se repetem consecutivas vezes -> cada pessoa tem uma repetição/STR em particular
+	AGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGATAGAT
+	pessoa x repete x vezes
+
+DNA Database:
+name, AGAT, AATG, TATC
+Alice, 28, 42, 14
+Bob, 17, 22, 19
+...
+
+TODO
+1. Abrir os arquivos CSV e a sequência de DNA.
+2. Para cada STR, computar a maior sequência desse STR na DNA sequence.
+3. Comparar o STR counter com cada linha no CSV file, para achar uma correspodência.
+	- Se achar, escrever "match"
+	- Se não achar, escrever "no match"
+
+1. 
+- A primeira coluna tem os nomes (pular e não considerar)
+- CSV module -> reader, DictReader (ler em uma sequência de listas/dicts)
+- Sys module -> acesso para o sys.argv
+- Abrir com open(nomedofile) -> ler usando nomedofile.read()
+
+2.
+- Para cada STR identificado -> computar quantos novos STRs estão colados começando nele.
+	- Continuar checando até não encontrar um novo STR igual -> não encontrou, mas continua procurando por novos STRs até acabar o arquivo
+- Usar len(string)
+- s[i:j] -> pegar a string s, retornar a substring começando do caractere i até o j (mas não inclui o j)
+
+3.
+- Salvar o STR counts em uma data structure.
+- Para cada coluna, checar se o STR count bate/equivale (match). Se sim, printar o nome da pessoa.
+- int(x) pega uma string e coloca em inteiro.
+- Para confirmar o match, comparar cada coluna da linha correspondente a pessoa (não considerando a primeira coluna que tem apenas o nome)
