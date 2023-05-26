@@ -1,0 +1,19 @@
+- Mata a mata de copa do mundo: 16 times (começa nas oitavas)
+
+- Calcular a probabilidade de qual time tem a maior chance de ganhar, de acordo com um ranking disponível no arquivo csv ("team,rating")
+
+run: python tournament.py 2018m.csv
+
+TODO
+- Completar a main function
+	- Usar csv.DictReader -> considerar cada linha como uma dict (chave = time, valor = rating)
+	- Guardar cada time dentro da lista teams
+	- Simular usando simulate_tournament() -> usar loop
+	- Acompanhar as vitórias e guardar no counts
+- Complete simulate_tournament()
+	- Usar simulate_round()
+		- Repetir isso até faltar 1 time
+	* 8 times -> 4 times
+	* 4 times -> 2 times
+	* 2 times -> 1 time
+	- Return o nome do time que ganhou
