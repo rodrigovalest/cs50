@@ -26,7 +26,7 @@ for char in text:
         palavras += 1
     elif char == "." or char == "!" or char == "?":
         frases += 1
-
+        
 grade = formula(letras, palavras, frases)
 
 print(grade)
