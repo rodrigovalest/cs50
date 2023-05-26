@@ -17,6 +17,19 @@ strbases = {
 
 chaves = list(strbases.keys())
 
+def check_person(linha):
+    person = "Not match"
+    numofstr = list(strbases.values())
+
+    for i in range(1, len(linha), 1):
+        if int(linha[i]) == int(numofstr[i - 1]):
+            person = linha[0]
+        else:
+            person = "Not match"
+            break
+        
+    return person 
+
 with open(argv[1], "r") as sequence:
     all_bases = sequence.read()
 
@@ -38,9 +51,10 @@ with open(argv[1], "r") as sequence:
         strbases[chaves[a]] = longest_sequence
         longest_sequence = 0
 
+numofstr = list(strbases.values())
+
 with open(argv[2], "r") as database:
     file = csv.reader(database)
-    person = 'Not match'
 
     for linha in file:
         check = [False for i in range(len(linha))]
@@ -48,16 +62,9 @@ with open(argv[2], "r") as database:
         if linha[0] == 'name':
             continue
 
-        for i in range(1, len(linha) - 1, 1):
-            if int(linha[i]) == int(strbases[chaves[i - 1]]):
-                print(True)
-                check[i] = True 
-            else:
-                check[i] = False
+        person = check_person(linha)
 
-        if check == True:
-            print(linha[0])
+        if person != "Not match":
             break
 
-        # for i in range(check):
-        #     if check[] == 
+print(person)
