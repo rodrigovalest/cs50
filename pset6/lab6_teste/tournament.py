@@ -2,7 +2,7 @@ import csv
 import sys
 import random
 
-N = 100
+N = 10000
 
 def main():
     if len(sys.argv) != 2:
@@ -18,12 +18,12 @@ def main():
             teams[linha[('team')]] = int(linha[('rating')])
             counts[linha[('team')]] = int(0)
 
-    print(teams)
+    # print(teams)
 
     for i in range(N):
         counts[(simulate_tournament(teams))] += 1
 
-    print(counts)
+    # print(counts)
 
     for team in sorted(counts, key=lambda team: counts[team], reverse=True):
         print(f"{team}: {counts[team] * 100 / N:.1f}% chance of winning")
@@ -67,7 +67,7 @@ def simulate_tournament(teams):
         winners = simulate_round(tmp)
         tmp.clear()
 
-    print(winners)
+    # print(winners)
     return winners[0]
 
 if __name__ == "__main__":
