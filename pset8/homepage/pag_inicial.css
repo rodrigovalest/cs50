@@ -1,0 +1,32 @@
+section#bem_vindo {
+    margin-top: 100px;
+}
+
+section#bem_vindo > div {
+    display: flex;
+}
+
+section#bem_vindo > p {
+    margin: 20px 0px;
+    width: 60vw;
+}
+
+
+section#outros_sites {
+    margin-top: 50px;
+}
+
+.sites > a:hover {
+    text-decoration: underline;
+    font-weight: 300;
+}
+
+.sites {
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.sites > img {
+    padding: 0px 10px 0px 0px;
+}
