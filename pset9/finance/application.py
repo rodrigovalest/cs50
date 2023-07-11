@@ -76,11 +76,18 @@ def register():
             # flash("Username is already being used")
             return apology("username is already being used", 403)
         elif username == '':
-            # flash("Invalid username")
-            return apology("invalid username", 403)
+            flash("Invalid username")
+            return redirect("/register")
+            # return apology("invalid username", 403)
         elif password == '':
             # flash("Invalid username")
             return apology("invalid password", 403)
+        elif len(password) < 8: # type: ignore
+            # flash("Invalid username")
+            return apology("password must be at least 8 characters long and include at least one numeric", 403)
+        elif len(password) > 30: # type: ignore
+            # flash("Invalid username")
+            return apology("password must be a maximum of 30 characters", 403)
         elif retyped_password == '':
             # flash("Invalid username")
             return apology("retype the password", 403)
@@ -130,7 +137,10 @@ def logout():
     session.clear()
     return redirect("/")
 
-
+@app.route("/forgot")
+def forgot():
+    """aaaa"""
+    return apology("desenvolvendo sa pora")
 
 @app.route("/quote", methods=["GET", "POST"])
 @login_required
