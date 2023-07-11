@@ -1,5 +1,4 @@
 import os
-
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session # type: ignore
@@ -46,111 +45,23 @@ if not os.environ.get("API_KEY"):
 @login_required # Decorator -> usuário deve estar logado para entrar na aplicação
 def index():
     """Show portfolio of stocks"""
-    return apology("TODO")
+    inventory = db.execute("SELECT * FROM inventory WHERE user_id = ?", session["user_id"])
 
+    total = 0
+    values = []
+    for i in range(len(inventory)):
+        value = lookup(inventory[i]["quote"])
+        value["shares"] = inventory[i]["shares"]
+        value["total"] = round(inventory[i]["shares"] * value["price"], 2)
+        values.append(value)
+        total += value["total"]
 
-@app.route("/buy", methods=["GET", "POST"])
-@login_required
-def buy():
-    """Buy shares of stock"""
-    if request.method == "POST":
-        quote = lookup(request.form.get("quote"))
-        if quote == None:
-            return apology("quote not found", 403)
-        
-        quantity = request.form.get("quantity")
-        print(quantity)
-        if int(quantity) <= 0 or quantity == "": # type: ignore
-            return apology("invalid quantity", 403)    
-        quantity = int(quantity) # type: ignore
+    cash = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+    cash = round(cash[0]["cash"], 2)
+    total += cash
+    total = round(total, 2)
 
-        total_price = quantity * quote["price"]
-
-        user_cash = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
-        if user_cash[0]["cash"] < total_price:
-            return apology("you don't have money for that", 403)
-        user_cash[0]["cash"] = user_cash[0]["cash"] - total_price
-
-        timestamp = datetime.now()
-        timestamp = f"{timestamp.date()} {timestamp.hour}:{timestamp.minute}:{timestamp.second}"
-        
-        db.execute("UPDATE users SET cash = ? WHERE id = ?", user_cash[0]["cash"], session["user_id"])
-        db.execute("INSERT INTO history (user_id, quote, quantity, unit_price, total_price, timestamp) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], quote["symbol"], quantity, quote["price"], total_price, timestamp)
-        
-        if len(db.execute("SELECT * FROM inventory WHERE user_id = ? AND quote = ?", session["user_id"], quote["symbol"])) == 0:
-            db.execute("INSERT INTO inventory (user_id, quote, quantity) VALUES (?, ?, ?)", session["user_id"], quote["symbol"], quantity)
-        else:
-            db.execute("UPDATE inventory SET quantity = quantity + ? WHERE user_id = ? AND quote = ?", quantity, session["user_id"], quote["symbol"])
-
-        return redirect("/")
-    
-    return render_template("buy.html")
-
-
-@app.route("/history")
-@login_required
-def history():
-    """Show history of transactions"""
-    rows = db.execute("SELECT * FROM history WHERE user_id = ?", session["user_id"])
-    return render_template("history.html", rows=rows)
-
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    """Log user in"""
-
-    # Forget any user_id
-    session.clear()
-
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
-
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
-
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
-
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")): # type: ignore
-            return apology("invalid username and/or password", 403)
-
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
-        return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("login.html")
-
-
-@app.route("/logout")
-def logout():
-    """Log user out"""
-    session.clear()
-    return redirect("/")
-
-
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
-    if request.method == "POST":
-        quote_result = lookup(request.form.get("quote_search"))
-
-        if quote_result == None:
-            return apology("quote not found", 403)
-        
-        return render_template("quote.html", quote_result=quote_result)
-
-    return render_template("quote.html")
+    return render_template("index.html", values=values, cash=cash, total=total)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -187,11 +98,154 @@ def register():
     return render_template("register.html")
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+    session.clear()
+
+    if request.method == "POST":
+
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")): # type: ignore
+            return apology("invalid username and/or password", 403)
+
+        session["user_id"] = rows[0]["id"]
+
+        return redirect("/")
+
+    else:
+        return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+    session.clear()
+    return redirect("/")
+
+
+
+@app.route("/quote", methods=["GET", "POST"])
+@login_required
+def quote():
+    """Get stock quote."""
+    if request.method == "POST":
+        quote = lookup(request.form.get("quote_search"))
+
+        if quote == None:
+            return apology("quote not found", 403)
+        
+        return render_template("quote.html", quote=quote)
+
+    return render_template("quote.html")
+
+
+@app.route("/buy", methods=["GET", "POST"])
+@login_required
+def buy():
+    """Buy shares of stock"""
+    if request.method == "POST":
+        quote = lookup(request.form.get("quote"))
+        shares = request.form.get("shares")
+
+        if quote == None:
+            return apology("quote not found", 403)
+
+        if shares == "":
+            return apology("invalid shares", 403)
+        
+        shares = int(shares) # type: ignore 
+        if shares <= 0:
+            return apology("invalid shares", 403)
+
+        total_price = shares * quote["price"]
+        total_price = round(total_price, 2)
+
+        user_cash = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        user_cash = user_cash[0]["cash"]
+        if user_cash < total_price:
+            return apology("you don't have money for that", 403)
+        user_cash = user_cash - total_price
+
+        timestamp = datetime.now()
+        timestamp = f"{timestamp.date()} {timestamp.hour}:{timestamp.minute}:{timestamp.second}"
+        
+        db.execute("UPDATE users SET cash = ? WHERE id = ?", user_cash, session["user_id"])
+        db.execute("INSERT INTO history (user_id, quote, shares, unit_price, total_price, timestamp) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], quote["symbol"], shares, quote["price"], total_price, timestamp)
+        
+        if len(db.execute("SELECT * FROM inventory WHERE user_id = ? AND quote = ?", session["user_id"], quote["symbol"])) == 0:
+            db.execute("INSERT INTO inventory (user_id, quote, shares) VALUES (?, ?, ?)", session["user_id"], quote["symbol"], shares)
+        else:
+            db.execute("UPDATE inventory SET shares = shares + ? WHERE user_id = ? AND quote = ?", shares, session["user_id"], quote["symbol"])
+
+        return redirect("/")
+    
+    return render_template("buy.html")
+
+
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
     """Sell shares of stock"""
-    return apology("TODO")
+    inventory = db.execute("SELECT * FROM inventory WHERE user_id = ?", session["user_id"])
+
+    if request.method == "POST":
+        quote = request.form.get("quote")
+        shares = request.form.get("shares")
+        found_quote = False
+
+        for i in range(len(inventory)):
+            if inventory[i]["quote"] == quote:
+                inventory = inventory[i]
+                found_quote = True
+                break
+
+        if found_quote == False:
+            return apology("invalid quote symbol")
+        if shares == "":
+            return apology("invalid shares")                 
+        if int(shares) > inventory["shares"] or int(shares) <= 0: # type: ignore
+            return apology("invalid shares")
+        shares = int(shares) # type: ignore
+
+        price = lookup(inventory["quote"])
+        total_price = shares * price["price"]
+        total_price = round(total_price, 2)
+
+        if price == None:
+            return apology("quote not found", 403)
+
+        timestamp = datetime.now()
+        timestamp = f"{timestamp.date()} {timestamp.hour}:{timestamp.minute}:{timestamp.second}"
+        shares = shares * -1
+
+        db.execute("UPDATE users SET cash = cash + ? WHERE id = ?", total_price, session["user_id"])
+        db.execute("INSERT INTO history (user_id, quote, shares, unit_price, total_price, timestamp) VALUES (?, ?, ?, ?, ?, ?)", session["user_id"], inventory["quote"], shares, price["price"], total_price, timestamp)
+        
+        if inventory["shares"] + shares == 0:
+            db.execute("DELETE FROM inventory WHERE user_id = ? AND quote = ?", session["user_id"], inventory["quote"])
+        else:
+            db.execute("UPDATE inventory SET shares = shares + ? WHERE user_id = ? AND quote = ?", shares, session["user_id"], inventory["quote"])
+
+        return redirect("/")
+
+    return render_template("sell.html", inventory=inventory)
+
+
+@app.route("/history")
+@login_required
+def history():
+    """Show history of transactions"""
+    rows = db.execute("SELECT * FROM history WHERE user_id = ?", session["user_id"])
+    return render_template("history.html", rows=rows)
+
 
 
 def errorhandler(e):

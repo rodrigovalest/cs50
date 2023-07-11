@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block main %}
-    {% if quote_result %}
-        <p>A share of {{ quote_result["name"] }} ({{ quote_result["symbol"] }}) costs ${{ quote_result["price"] }}</p>
+    {% if quote %}
+        <p>A share of {{ quote["name"] }} ({{ quote["symbol"] }}) costs ${{ quote["price"] }}</p>
     {% else %}
         <form action="/quote" method="post">
             <div class="form-group">
