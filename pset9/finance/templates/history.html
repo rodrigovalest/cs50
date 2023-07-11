@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+<!-- <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+</style> -->
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Shares</th>
+            <th>Price</th>
+            <th>Transacted</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row["quote"] }}</td>
+            <td>{{ row["quantity"] }}</td>
+            <td>{{ row["price"] }}</td>
+            <td>{{ row["timestamp"] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
